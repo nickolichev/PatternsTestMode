@@ -119,3 +119,5 @@ public class AccountTest {
             .shouldBe(Condition.text("Поле обязательно для заполнения"));
   }
 }
+
+//
