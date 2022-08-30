@@ -47,40 +47,15 @@ public class DataGenerator {
     private Registration() {
     }
 
+    public static RegistrationDto getUser(String status) {
+      RegistrationDto user = new RegistrationDto(getRandomLogin(), getRandomPassword(), status);
+      return user;
+    }
+
     public static RegistrationDto getRegisteredUser(String status) {
-      RegistrationDto registeredUser = new RegistrationDto(getRandomLogin(), getRandomPassword(), status);
+      RegistrationDto registeredUser = getUser(status);
       sendRequest(registeredUser);
       return registeredUser;
-    }
-
-    public static RegistrationDto getRegisteredUserWithIncorrectPassword(String status) {
-      String incorrectPassword = "password";
-      RegistrationDto registeredUser = new RegistrationDto(getRandomLogin(), incorrectPassword, status);
-      sendRequest(registeredUser);
-      return new RegistrationDto(getRandomLogin(), incorrectPassword, status);
-    }
-
-    public static RegistrationDto getRegisteredUserWithIncorrectLogin(String status) {
-      String incorrectLogin = "Вася";
-      RegistrationDto registeredUser = new RegistrationDto(incorrectLogin, getRandomPassword(), status);
-      sendRequest(registeredUser);
-      return new RegistrationDto(incorrectLogin, getRandomPassword(), status);
-    }
-
-    public static RegistrationDto getRegisteredUserWithIncorrectLoginAndPassword(String status) {
-      String incorrectPassword = "password";
-      String incorrectLogin = "Вася";
-      RegistrationDto registeredUser = new RegistrationDto(incorrectLogin, incorrectPassword, status);
-      sendRequest(registeredUser);
-      return new RegistrationDto(incorrectLogin, incorrectPassword, status);
-    }
-
-    public static RegistrationDto getBlockedUserWithIncorrectLoginAndPassword(String status) {
-      String incorrectPassword = "password";
-      String incorrectLogin = "Вася";
-      RegistrationDto registeredUser = new RegistrationDto(incorrectLogin, incorrectPassword, status);
-      sendRequest(registeredUser);
-      return new RegistrationDto(incorrectLogin, incorrectPassword, status);
     }
 
     public static RegistrationDto getEmptyLoginRegisteredUser(String status) {

@@ -12,6 +12,8 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.*;
 import static ru.netology.testmode.data.DataGenerator.Registration.*;
+import static ru.netology.testmode.data.DataGenerator.getRandomLogin;
+import static ru.netology.testmode.data.DataGenerator.getRandomPassword;
 
 public class AccountTest {
 
@@ -26,8 +28,10 @@ public class AccountTest {
     $x("//input[@name='login']").setValue(registeredUser.getLogin());
     $x("//input[@name='password']").setValue(registeredUser.getPassword());
     $x("//*[@class='button__text']").click();
-    $x("//*[@class='App_appContainer__3jRx1']").should(visible, Duration.ofSeconds(15));
-    $x("//*[@class='App_appContainer__3jRx1']").should(text("Личный кабинет"));
+    $x("//*[@class='heading heading_size_l heading_theme_alfa-on-white']")
+            .should(visible, Duration.ofSeconds(5));
+    $x("//*[@class='heading heading_size_l heading_theme_alfa-on-white']")
+            .should(text("Личный кабинет"));
   }
 
   @Test
@@ -36,27 +40,28 @@ public class AccountTest {
     $x("//input[@name='login']").setValue(registeredUser.getLogin());
     $x("//input[@name='password']").setValue(registeredUser.getPassword());
     $x("//*[@class='button__text']").click();
-    $x("//div[@data-test-id='error-notification']").should(visible, Duration.ofSeconds(15));
+    $x("//div[@data-test-id='error-notification']")
+            .should(visible, Duration.ofSeconds(5));
     $x("//div[@data-test-id='error-notification']")
             .should(text("Ошибка! Пользователь заблокирован"));
   }
 
   @Test
   void incorrectPasswordRegisteredUser() {
-    RegistrationDto registeredUser = getRegisteredUserWithIncorrectPassword("active");
+    RegistrationDto registeredUser = getRegisteredUser("active");
     $x("//input[@name='login']").setValue(registeredUser.getLogin());
-    $x("//input[@name='password']").setValue(registeredUser.getPassword());
+    $x("//input[@name='password']").setValue(getRandomPassword());
     $x("//*[@class='button__text']").click();
     $x("//div[@data-test-id='error-notification']")
-            .should(visible, Duration.ofSeconds(15));
+            .should(visible, Duration.ofSeconds(5));
     $x("//div[@data-test-id='error-notification']")
             .should(text("Ошибка! Неверно указан логин или пароль"));
   }
 
   @Test
   void incorrectLoginRegisteredUser() {
-    RegistrationDto registeredUser = getRegisteredUserWithIncorrectLogin("active");
-    $x("//input[@name='login']").setValue(registeredUser.getLogin());
+    RegistrationDto registeredUser = getRegisteredUser("active");
+    $x("//input[@name='login']").setValue(getRandomLogin());
     $x("//input[@name='password']").setValue(registeredUser.getPassword());
     $x("//*[@class='button__text']").click();
     $x("//div[@data-test-id='error-notification']")
@@ -65,26 +70,14 @@ public class AccountTest {
             .should(text("Ошибка! Неверно указан логин или пароль"));
   }
 
-  // тестирование бага "Система впускает в ЛК при введении одновременно невалидных Login и Password в статусе "active"
-  // см. issues #1
   @Test
-  void incorrectLoginAndPasswordRegisteredUser() {
-    RegistrationDto registeredUser = getRegisteredUserWithIncorrectLoginAndPassword("active");
-    $x("//input[@name='login']").setValue(registeredUser.getLogin());
-    $x("//input[@name='password']").setValue(registeredUser.getPassword());
+  void incorrectLoginAndPasswordNotRegisteredUser() {
+    RegistrationDto user = getUser("active");
+    $x("//input[@name='login']").setValue(user.getLogin());
+    $x("//input[@name='password']").setValue(user.getPassword());
     $x("//*[@class='button__text']").click();
-    $x("//*[@class='App_appContainer__3jRx1']").should(visible, Duration.ofSeconds(15));
-    $x("//*[@class='App_appContainer__3jRx1']").should(text("Личный кабинет"));
-  }
-
-  @Test
-  void incorrectLoginAndPasswordBlockedUser() {
-    RegistrationDto registeredUser = getBlockedUserWithIncorrectLoginAndPassword("blocked");
-    $x("//input[@name='login']").setValue(registeredUser.getLogin());
-    $x("//input[@name='password']").setValue(registeredUser.getPassword());
-    $x("//*[@class='button__text']").click();
-    $x("//div[@data-test-id='error-notification']").should(visible, Duration.ofSeconds(15));
-    $x("//div[@data-test-id='error-notification']").should(text("Ошибка! Пользователь заблокирован"));
+    $x("//div[@data-test-id='error-notification']")
+            .should(text("Ошибка! Неверно указан логин или пароль"));
   }
 
   @Test

@@ -16,4 +16,7 @@ public class RegistrationDto {
     this.password = password;
     this.status = status;
   }
+  public void IncorrectUserData() {
+  }
+
 }
